@@ -10,29 +10,30 @@ library(gridExtra)
 
 # Función auxiliar para generar los gráficos RDD con estilo idéntico al paper
 plot_rdd <- function(data, x_var, y_pts, y_line, title_text, y_label, y_limits, y_breaks, fit_type = "Polynomial fit") {
-  # Filtrar muestra por bin (1 punto por bin, rango [-0.25, 0.25])
+  # Filtrar muestra por bin (100 bins de ancho 0.005 en [-0.25, 0.25): difgrp 150 a 249)
   df_plot <- data %>%
-    filter(get(x_var) > -0.251 & get(x_var) < 0.251 & use == 1 & difgrp >= 150 & difgrp <= 250) %>%
+    filter(use == 1 & difgrp >= 150 & difgrp < 250) %>%
     group_by(difgrp) %>%
     slice(1) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(bin_x = (difgrp - 200) * 0.005 + 0.0025)
   
   # Línea paramétrica: separamos izquierda y derecha de cero para que no cruce el umbral
-  p <- ggplot(df_plot, aes(x = .data[[x_var]])) +
+  p <- ggplot(df_plot, aes(x = bin_x)) +
     # Línea vertical punteada en el corte x = 0
     geom_vline(xintercept = 0, linetype = "dashed", color = "gray40", linewidth = 0.6) +
     # Promedios locales (puntos negros)
     geom_point(aes(y = .data[[y_pts]], shape = "Local Average"), size = 1.6, color = "black") +
     # Ajuste paramétrico (línea sólida separada a izquierda y derecha de cero)
-    geom_line(data = filter(df_plot, .data[[x_var]] < 0), 
+    geom_line(data = filter(df_plot, bin_x < 0), 
               aes(y = .data[[y_line]], linetype = fit_type), color = "black", linewidth = 0.7) +
-    geom_line(data = filter(df_plot, .data[[x_var]] >= 0), 
+    geom_line(data = filter(df_plot, bin_x >= 0), 
               aes(y = .data[[y_line]], linetype = fit_type), color = "black", linewidth = 0.7) +
     # Escalas y títulos
     scale_x_continuous(limits = c(-0.25, 0.25), breaks = seq(-0.25, 0.25, 0.05)) +
     scale_y_continuous(limits = y_limits, breaks = y_breaks) +
-    scale_shape_manual(name = NULL, values = c("Local Average" = 16)) +
-    scale_linetype_manual(name = NULL, values = setNames("solid", fit_type)) +
+    scale_shape_manual(name = NULL, values = c("Local Average" = 16), guide = guide_legend(order = 1)) +
+    scale_linetype_manual(name = NULL, values = setNames("solid", fit_type), guide = guide_legend(order = 2)) +
     labs(
       title = title_text,
       x = "Democratic Vote Share Margin of Victory, Election t",
@@ -42,8 +43,11 @@ plot_rdd <- function(data, x_var, y_pts, y_line, title_text, y_label, y_limits, 
     theme(
       panel.grid = element_blank(),
       legend.position = c(0.18, 0.82),
-      legend.background = element_rect(color = "black", linewidth = 0.3),
-      legend.key.height = unit(0.35, "cm"),
+      legend.background = element_blank(),
+      legend.box.background = element_rect(color = "black", fill = "white", linewidth = 0.4),
+      legend.spacing.y = unit(-0.15, "cm"),
+      legend.margin = margin(2, 6, 2, 6),
+      legend.key.height = unit(0.38, "cm"),
       legend.text = element_text(size = 8),
       plot.title = element_text(size = 10, face = "bold", hjust = 0.5),
       axis.title = element_text(size = 8.5)

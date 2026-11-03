@@ -13,8 +13,15 @@ library(dplyr)
 # 1. Cargar la base de estimación congresal
 df_raw <- read_dta("data/Lee2008/table_two_final.dta")
 
-# 2. Filtrar muestra analítica oficial (use == 1 y cluster no NA)
-df_sub <- subset(df_raw, use == 1 & !is.na(statedisdec))
+# 2. Filtrar muestra analítica oficial (use == 1 y right no NA, N = 6,558)
+df_use <- subset(df_raw, use == 1)
+# Nota: En public_use.do, Lee corre primero la regresión auxiliar de residuos sobre use==1
+m_aux <- lm(demsharenext ~ demshareprev + demwinprev + demofficeexp + othofficeexp + demelectexp + othelectexp, 
+            data = df_use)
+df_use$demsharenextres <- residuals(m_aux)
+
+# Filtrar las N = 6,558 observaciones válidas para las 8 regresiones (excluye el único empate exacto difdemshare == 0 con right == NA)
+df_sub <- subset(df_use, !is.na(right) & !is.na(statedisdec))
 
 # Términos del polinomio de orden 4 interactuado (igual que Stata: fitpoly)
 poly_terms <- paste(
@@ -46,9 +53,6 @@ m5 <- feols(as.formula(paste("demsharenext ~", poly_terms,
             data = df_sub, cluster = ~statedisdec)
 
 # Columna (6): Residual vote share t + 1 (Regresión en 2 etapas con residuos)
-m_aux <- lm(demsharenext ~ demshareprev + demwinprev + demofficeexp + othofficeexp + demelectexp + othelectexp, 
-            data = df_sub)
-df_sub$demsharenextres <- residuals(m_aux)
 m6 <- feols(as.formula(paste("demsharenextres ~", poly_terms)), 
             data = df_sub, cluster = ~statedisdec)
 

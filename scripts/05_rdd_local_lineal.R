@@ -10,9 +10,9 @@ library(rdrobust)
 library(ggplot2)
 library(readr)
 
-# 1. Cargar datos
+# 1. Cargar datos (filtrando exactamente las N = 6,558 observaciones válidas)
 df_raw <- read_dta("data/Lee2008/table_two_final.dta")
-df_sub <- subset(df_raw, use == 1 & !is.na(statedisdec))
+df_sub <- subset(df_raw, use == 1 & !is.na(right) & !is.na(statedisdec))
 
 # Variables clave:
 Y <- df_sub$demsharenext
