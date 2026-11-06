@@ -69,22 +69,27 @@ cat(sprintf("  - MIT table_two_final   : N = %d obs | %d variables (incluye clú
 # ------------------------------------------------------------------------------
 
 # Paso 1: Figura 1
+if (basename(getwd()) == "scripts") setwd("..")
 cat("\n[1/5] Ejecutando scripts/01_figura1.R ...\n")
 source("scripts/01_figura1.R", encoding = "UTF-8")
 
 # Paso 2: Tabla 1
+if (basename(getwd()) == "scripts") setwd("..")
 cat("\n[2/5] Ejecutando scripts/02_tabla1.R ...\n")
 source("scripts/02_tabla1.R", encoding = "UTF-8")
 
 # Paso 3: Tabla 2
+if (basename(getwd()) == "scripts") setwd("..")
 cat("\n[3/5] Ejecutando scripts/03_tabla2.R ...\n")
 source("scripts/03_tabla2.R", encoding = "UTF-8")
 
 # Paso 4: Figuras 2 a 5
+if (basename(getwd()) == "scripts") setwd("..")
 cat("\n[4/5] Ejecutando scripts/04_figuras_2_a_5.R ...\n")
 source("scripts/04_figuras_2_a_5.R", encoding = "UTF-8")
 
 # Paso 5: RDD Local Lineal y Sensibilidad al Ancho de Banda (Ficha C3 Rúbrica)
+if (basename(getwd()) == "scripts") setwd("..")
 cat("\n[5/5] Ejecutando scripts/05_rdd_local_lineal.R ...\n")
 source("scripts/05_rdd_local_lineal.R", encoding = "UTF-8")
 
