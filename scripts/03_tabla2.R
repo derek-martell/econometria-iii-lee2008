@@ -5,6 +5,7 @@
 # N = 6,558; Errores agrupados por State-District-Decade (statedisdec)
 # ==============================================================================
 
+if (basename(getwd()) == "scripts") setwd("..")
 library(haven)
 library(fixest)
 library(readr)

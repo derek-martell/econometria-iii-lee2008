@@ -4,6 +4,7 @@
 # Democratic Candidates, Winners vs. Losers (1948-1996, N = 6,558)
 # ==============================================================================
 
+if (basename(getwd()) == "scripts") setwd("..")
 library(haven)
 library(dplyr)
 library(fixest)

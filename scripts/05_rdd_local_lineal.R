@@ -4,6 +4,7 @@
 # Paquete: rdrobust (Calonico, Cattaneo & Titiunik)
 # ==============================================================================
 
+if (basename(getwd()) == "scripts") setwd("..")
 library(haven)
 library(dplyr)
 library(rdrobust)

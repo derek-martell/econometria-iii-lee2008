@@ -3,6 +3,7 @@
 # Electoral Success of U.S. House Incumbents: 1948-1998
 # ==============================================================================
 
+if (basename(getwd()) == "scripts") setwd("..")
 library(haven)
 library(ggplot2)
 

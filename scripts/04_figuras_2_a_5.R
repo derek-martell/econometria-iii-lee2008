@@ -3,6 +3,7 @@
 # Promedios locales en bins de 0.005 entre [-0.25, 0.25] y ajuste paramétrico
 # ==============================================================================
 
+if (basename(getwd()) == "scripts") setwd("..")
 library(haven)
 library(dplyr)
 library(ggplot2)
